@@ -10,7 +10,7 @@ class App extends React.Component<IAppProps, IAppState> {
 
 	async componentDidMount() {
 		try {
-			let r = await fetch('/api/hello');
+			let r = await fetch('/api/chirps');
 			let name = await r.json();
 			this.setState({ name });
 		} catch (error) {
