@@ -13,8 +13,10 @@ router.get('/:id?', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    chirpsStore.CreateChirp(req.body);
-    res.sendStatus(200);
+
+    chirpsStore.CreateChirp({user: req.body.user, message: req.body.message});
+    // res.sendStatus(200);
+    res.sendStatus(200)
 });
 
 router.put('/:id?', (req, res) => {
