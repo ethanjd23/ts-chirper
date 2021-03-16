@@ -1,48 +1,101 @@
 import * as React from "react";
-import Chirp from "./Chirp";
+import Chirp from "./components/Chirp";
 
-const App = (props: AppProps) => {
+const Home: React.FunctionComponent = (props) => {
   const [chirps, setChirps] = React.useState<Array<any>>([]);
+  const [user, setUser] = React.useState<string>("");
+  const [message, setMessage] = React.useState<string>("");
 
   React.useEffect(() => {
     (async () => {
-      try {
-        let res = await fetch("http://localhost:3000/api/chirps");
-        console.log("test");
-        let chirpsJSON = await res.json();
-        let ids = Object.keys(chirpsJSON);
-        let chirpsArray = ids.map((id) => {
-          return {
-            id: id,
-            user: chirpsJSON[id].user,
-            message: chirpsJSON[id].message,
-          };
-        }); // Creating an array of objects from the JSON
-        chirpsArray.pop(); // deleting nextid off each object
-        setChirps(chirpsArray);
-      } catch (error) {
-        console.log(error);
-      }
+      getAndRenderChirps();
     })();
-  }, []);
+  }, [chirps]);
+
+  async function getAndRenderChirps() {
+    try {
+      let res = await fetch("http://localhost:3000/api/chirps");
+      console.log("test");
+      let chirpsJSON = await res.json();
+      let ids = Object.keys(chirpsJSON);
+      let chirpsArray = ids.map((id) => {
+        return {
+          id: id,
+          user: chirpsJSON[id].user,
+          message: chirpsJSON[id].message,
+        };
+      }); // Creating an array of objects from the JSON
+      chirpsArray.pop(); // deleting nextid off each object
+      setChirps(chirpsArray);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handlePostClick() {
+    console.log("test");
+    let newChirp = { user: user, message: message };
+    console.log(newChirp);
+    $.ajax({
+      type: "POST",
+      url: "/api/chirps",
+      data: JSON.stringify(newChirp),
+      contentType: "application/json",
+    }).then(() => {
+      setUser("");
+      setMessage("");
+      setChirps([]);
+    });
+  }
+
   return (
     <>
-      <div className="min-vh-100 d-flex justify-content-center align-items-center">
-        <h1 className="display-1">hey</h1>
-      </div>
-      <div className="card-deck d-flex flex-column align-items-center col-8">
-        {chirps
-          .slice(0)
-          .reverse()
-          .map((chirp) => {
-            /* Reverses array so chirps display from newest to oldest */
-            return <Chirp user={chirp.user} message={chirp.message} />;
-          })}
+      <div className="d-flex flex-direction-column">
+        <div>
+          <div className="input-group">
+            <span className="input-group-text">Username</span>
+            <input
+              type="text"
+              className="form-control"
+              aria-label="Subject"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+            ></input>
+          </div>
+          <div className="input-group">
+            <span className="input-group-text">Chirp</span>
+            <textarea
+              className="form-control"
+              aria-label="Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            ></textarea>
+          </div>
+        </div>
+        <button
+          className="btn btn-success btn-md h-25"
+          onClick={handlePostClick}
+        >
+          Post chirp fr
+        </button>
+        <div className="card-deck d-flex flex-column align-items-center col-8">
+          {chirps
+            .slice(0)
+            .reverse()
+            .map((chirp) => {
+              /* Reverses array so chirps display from newest to oldest */
+              return (
+                <Chirp
+                  id={chirp.id}
+                  user={chirp.user}
+                  message={chirp.message}
+                />
+              );
+            })}
+        </div>
       </div>
     </>
   );
 };
 
-interface AppProps {}
-
-export default App;
+export default Home;
