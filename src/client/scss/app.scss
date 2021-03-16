@@ -2,4 +2,8 @@ $theme-colors: (
     'primary': #0091ea //Covalence Blue!  :D
 );
 
+body {
+    background-color: lightgrey;
+}
+
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';

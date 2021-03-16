@@ -1,5 +1,6 @@
 import * as React from "react";
 import Chirp from "./components/Chirp";
+import Header from "./components/Header";
 
 const Home: React.FunctionComponent = (props) => {
   const [chirps, setChirps] = React.useState<Array<any>>([]);
@@ -10,12 +11,11 @@ const Home: React.FunctionComponent = (props) => {
     (async () => {
       getAndRenderChirps();
     })();
-  }, [chirps]);
+  }, [chirps]); // listening for chirps changes
 
   async function getAndRenderChirps() {
     try {
       let res = await fetch("http://localhost:3000/api/chirps");
-      console.log("test");
       let chirpsJSON = await res.json();
       let ids = Object.keys(chirpsJSON);
       let chirpsArray = ids.map((id) => {
@@ -33,9 +33,7 @@ const Home: React.FunctionComponent = (props) => {
   }
 
   function handlePostClick() {
-    console.log("test");
     let newChirp = { user: user, message: message };
-    console.log(newChirp);
     $.ajax({
       type: "POST",
       url: "/api/chirps",
@@ -44,14 +42,15 @@ const Home: React.FunctionComponent = (props) => {
     }).then(() => {
       setUser("");
       setMessage("");
-      setChirps([]);
+      setChirps([]); // causes useEffect to rerun
     });
   }
 
   return (
     <>
-      <div className="d-flex flex-direction-column">
-        <div>
+    <Header />
+      <div className="row">
+        <div className="container row mx-4">
           <div className="input-group">
             <span className="input-group-text">Username</span>
             <input
@@ -78,7 +77,7 @@ const Home: React.FunctionComponent = (props) => {
         >
           Post chirp fr
         </button>
-        <div className="card-deck d-flex flex-column align-items-center col-8">
+        <div className="container justify-content-center">
           {chirps
             .slice(0)
             .reverse()
