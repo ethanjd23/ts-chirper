@@ -14,12 +14,13 @@ const Chirp: React.FunctionComponent<CardProps> = (props) => {
   const [chirpMessage, setChirpMessage] = React.useState<string>(props.message);
 
   const showModal = () => {
-    console.log("It's show modal?");
     setIsOpen(true);
   };
 
   const hideModal = () => {
-    console.log("it's hide modal?");
+    setChirpUser(props.user);
+    setChirpMessage(props.message); // setting chirp back to original
+
     setIsOpen(false);
   };
 
@@ -38,7 +39,6 @@ const Chirp: React.FunctionComponent<CardProps> = (props) => {
   }
 
   async function deleteChirp() {
-    console.log("It's delete");
     $.ajax({
       type: "DELETE",
       url: `/api/chirps/${props.id}`,
@@ -92,24 +92,34 @@ const Chirp: React.FunctionComponent<CardProps> = (props) => {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <button className="btn btn-secondary"onClick={hideModal}>Cancel</button>
-          <button className="btn btn-success"onClick={updateChirp}>Save</button>
+          <button className="btn btn-secondary" onClick={hideModal}>
+            Cancel
+          </button>
+          <button className="btn btn-success" onClick={updateChirp}>
+            Save
+          </button>
         </Modal.Footer>
       </Modal>
 
       {/* Card Below */}
-      <div key={props.id} id={props.id} className="card col-6 m-3">
+      <div
+        key={props.id}
+        id={props.id}
+        className="card col-6 m-3 shadow rounded"
+      >
         <p className="card-header">{chirpUser}</p>
         <div className="card-body">
           <p className="card-title">{props.id}</p>
           <h5 className="card-text">{chirpMessage}</h5>
         </div>
-        <button className="btn-info btn mb-3" onClick={showModal}>
-          Edit Chirp
-        </button>
-        <button className="btn-danger btn mb-3" onClick={deleteChirp}>
-          Delete
-        </button>
+        <div id="button-container" className="row d-flex flex-row-reverse">
+          <button className="btn-danger btn m-2 col-2" onClick={deleteChirp}>
+            Delete
+          </button>
+          <button className="btn-info btn m-2 col-2" onClick={showModal}>
+            Edit
+          </button>
+        </div>
       </div>
     </>
   );

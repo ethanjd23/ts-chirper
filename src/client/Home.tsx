@@ -10,14 +10,12 @@ const Home: React.FunctionComponent = (props) => {
 
   React.useEffect(() => {
     (async () => {
-      console.log("it's useEffect")
       getAndRenderChirps();
     })();
   }, []); // listening for chirps changes
 
   async function getAndRenderChirps() {
     try {
-      console.log("it's renderChirps")
       let res = await fetch("http://localhost:3000/api/chirps");
       let chirpsJSON = await res.json();
       let ids = Object.keys(chirpsJSON);
@@ -36,7 +34,6 @@ const Home: React.FunctionComponent = (props) => {
   }
 
   function handlePostClick() {
-    console.log("it's postClick")
     let newChirp = { user: user, message: message };
     $.ajax({
       type: "POST",
