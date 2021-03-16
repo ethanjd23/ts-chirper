@@ -6,15 +6,18 @@ const Home: React.FunctionComponent = (props) => {
   const [chirps, setChirps] = React.useState<Array<any>>([]);
   const [user, setUser] = React.useState<string>("");
   const [message, setMessage] = React.useState<string>("");
+  
 
   React.useEffect(() => {
     (async () => {
+      console.log("it's useEffect")
       getAndRenderChirps();
     })();
-  }, [chirps]); // listening for chirps changes
+  }, []); // listening for chirps changes
 
   async function getAndRenderChirps() {
     try {
+      console.log("it's renderChirps")
       let res = await fetch("http://localhost:3000/api/chirps");
       let chirpsJSON = await res.json();
       let ids = Object.keys(chirpsJSON);
@@ -33,6 +36,7 @@ const Home: React.FunctionComponent = (props) => {
   }
 
   function handlePostClick() {
+    console.log("it's postClick")
     let newChirp = { user: user, message: message };
     $.ajax({
       type: "POST",
@@ -42,7 +46,7 @@ const Home: React.FunctionComponent = (props) => {
     }).then(() => {
       setUser("");
       setMessage("");
-      setChirps([]); // causes useEffect to rerun
+      getAndRenderChirps();
     });
   }
 

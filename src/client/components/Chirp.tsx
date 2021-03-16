@@ -14,14 +14,32 @@ const Chirp: React.FunctionComponent<CardProps> = (props) => {
   const [chirpMessage, setChirpMessage] = React.useState<string>(props.message);
 
   const showModal = () => {
+      console.log("It's show modal?")
     setIsOpen(true);
   };
 
   const hideModal = () => {
+      console.log("it's hide modal?")
     setIsOpen(false);
   };
 
+  async function updateChirp() {
+      let changedChirp = {user: chirpUser, message: chirpMessage};
+      setIsOpen(false);
+    $.ajax({
+        type: "PUT",
+        url: `/api/chirps/${props.id}`,
+        data: JSON.stringify(changedChirp),
+        contentType: "application/json"
+    }).then(() => {
+        setChirpUser(chirpUser);
+        setChirpMessage(chirpMessage);
+
+    })
+  }
+
   async function deleteChirp() {
+      console.log("It's delete");
     $.ajax({
       type: "DELETE",
       url: `/api/chirps/${props.id}`,
@@ -50,7 +68,9 @@ const Chirp: React.FunctionComponent<CardProps> = (props) => {
                 className="form-control"
                 id="recipient-name"
                 value={chirpUser}
-                onChange={(e) => {setChirpUser(e.target.value);}}
+                onChange={(e) => {
+                    console.log("It's chirpUser Modal");
+                    setChirpUser(e.target.value);}}
               ></input>
             </div>
             <div className="form-group">
@@ -61,23 +81,25 @@ const Chirp: React.FunctionComponent<CardProps> = (props) => {
                 className="form-control"
                 id="message-text"
                 value={chirpMessage}
-                onChange={(e) => {setChirpMessage(e.target.value);}}
+                onChange={(e) => {
+                    console.log("It's chirpMessage Modal");
+                    setChirpMessage(e.target.value);}}
               ></textarea>
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
           <button onClick={hideModal}>Cancel</button>
-          <button>Save</button>
+          <button onClick={updateChirp}>Save</button>
         </Modal.Footer>
       </Modal>
 
       {/* Card Below */}
       <div key={props.id} className="card col-6 m-3">
-        <p className="card-header">{props.user}</p>
+        <p className="card-header">{chirpUser}</p>
         <div className="card-body">
           <p className="card-title">{props.id}</p>
-          <h5 className="card-text">{props.message}</h5>
+          <h5 className="card-text">{chirpMessage}</h5>
         </div>
         <button className="btn-danger btn" onClick={deleteChirp}>
           Delete
