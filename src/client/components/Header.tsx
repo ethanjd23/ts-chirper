@@ -4,7 +4,7 @@ const Header: React.FunctionComponent = props => {
 
 
     return(
-        <header className="jumbotron p-4 display-4">Chirpr Again Again Again</header>
+        <header className="jumbotron p-4 display-4 custom-bg">Chirpr Again Again Again</header>
     )
 };
 

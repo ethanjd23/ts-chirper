@@ -53,8 +53,8 @@ const Home: React.FunctionComponent = (props) => {
   return (
     <>
     <Header />
-      <div className="row">
-        <div className="container row mx-4">
+      <div className="row custom-bg justify-content-center">
+        <div className="col-6">
           <div className="input-group">
             <span className="input-group-text">Username</span>
             <input
@@ -75,13 +75,16 @@ const Home: React.FunctionComponent = (props) => {
             ></textarea>
           </div>
         </div>
+        <div className="container row justify-content-center">
         <button
-          className="btn btn-success btn-md h-25"
+          className="btn btn-success btn-md col-6 align-center"
           onClick={handlePostClick}
         >
+          
           Post chirp fr
         </button>
-        <div className="container justify-content-center">
+        </div>
+        <div className="container row justify-content-center custom-bg">
           {chirps
             .slice(0)
             .reverse()
